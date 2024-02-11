@@ -54,39 +54,5 @@ abstract class Products
     abstract public function read(float $id): void;
     abstract public function update(): bool;
     abstract public function delete(string $sku): bool;
-/*
-    protected function validateSKU(string $table, string $sku): bool
-    {
-        // Use cURL or another HTTP request method to call the SKU validation script
-        $ch = curl_init('checkInputDuplication.php');
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, ['table' => $table, 'sku' => $sku]);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
 
-        // Decode the JSON response
-        $result = json_decode($response, true);
-
-        // Return the result of the SKU validation
-        return $result['valid'];
-    }
-
-    protected function validateName(string $name): bool
-    {
-        // Implement name validation logic
-        return true;
-    }
-
-    protected function validatePrice(float $price): bool
-    {
-        // Implement price validation logic
-        return true;
-    }
-
-    protected function displayAll(){
-        
-    }
-    // Add more validation methods as needed
-    */
 }
