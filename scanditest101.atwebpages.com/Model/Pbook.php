@@ -7,21 +7,31 @@ class Pbook extends Products {
     public function __construct(float $id,string $sku, string $name, float $price, $dbc, float $weight){
         parent::__construct($id, $sku, $name, $price, $dbc);
     $this->weight = $weight;
+
+
     }
 
       public function setWeight(float $weight): void {
         $this->weight = $weight;
     }
 
+
+
     public function getWeight(): float {
         return $this->weight;
     }
+
 
     public function setAdditionalProperties($formData)
     {
         $this->weight = $formData['weight'] ?? null;
     }
 
+
+
+    // Implement create method to insert data into the database
+    public function create(): bool
+    {
         $sql = "INSERT INTO pbook (id, sku, name, price, weight) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->dbc->prepare($sql);
         $result = $stmt->execute([$this->id, $this->sku, $this->name, $this->price, $this->weight]);
@@ -29,6 +39,12 @@ class Pbook extends Products {
         return $result;
     }
 
+
+
+
+
+    // Implement read method to retrieve data from the database
+    public function read(float $id): void
     {
 
         $sql = "SELECT * FROM pbook WHERE id = ?";
@@ -37,6 +53,7 @@ class Pbook extends Products {
         $data = $stmt->fetch();
 
         if ($data) {
+            // Populate object properties with retrieved data
             $this->id = $data['id'];
             $this->sku = $data['sku'];
             $this->name = $data['name'];
@@ -45,14 +62,17 @@ class Pbook extends Products {
         }
     }
 
+    // Implement update method to modify data in the database
     public function update(): bool
     {
         $sql = "UPDATE pbook SET sku = ?, name = ?, price = ?, weight = ? WHERE id = ?";
         $stmt = $this->dbc->prepare($sql);
         $result = $stmt->execute([$this->sku, $this->name, $this->price, $this->weight, $this->id]);
+
         return $result;
     }
 
+    // Implement delete method to remove data from the database
     public function delete(string $sku): bool
     {
         $sql = "DELETE FROM pbook WHERE sku = ?";
@@ -62,6 +82,7 @@ class Pbook extends Products {
         return $result;
     }
 
+    // Implement display method to show information about the DVD
     public function display(): void
     {
         echo "Displaying DVD information:<br>";
@@ -72,10 +93,25 @@ class Pbook extends Products {
         echo "weight: {$this->weight} MB<br>";
     }
 
+
+
+    // sku validation method specific to pbook
+    public function validateSKU(string $table, string $sku): bool
+    {
+        // Perform sku validation using the parent class method
+        return parent::validateSKU(
+            'pbook',
+            $sku
+        );
+    }
+
+    // Inside your concrete class (e.g., pbook.php)
     public function getAllProducts()
     {
         $sql = "SELECT * FROM pbook ORDER BY id";  // Change 'pbook' to the actual table name
         $stmt = $this->dbc->query($sql);
+
+        // Fetch products and return an array of objects
         $products = [];
         while ($data = $stmt->fetch()) {
             $product = new Pbook(
@@ -96,7 +132,10 @@ class Pbook extends Products {
 
     public function displayAll()
     {
+
         $products = $this->getAllProducts();
+        // Display the HTML structure for each product
+
         echo '<div class="row mb-3 mt-3 mx-5">';
         foreach ($products as $product) {
             echo '<div class="col-md-2 mb-3">';
