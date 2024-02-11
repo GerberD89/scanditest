@@ -1,0 +1,2 @@
+# scanditest
+Junior developer assignment
